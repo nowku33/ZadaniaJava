@@ -1,16 +1,15 @@
 package org.example;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 public class DayCheck {
 
     private DayCheck() {
-        throw new IllegalStateException("Utility class");
     }
 
     public static void dayOfWeek(int dayOfWeek) {
-
-        switch(dayOfWeek) {
+        switch (dayOfWeek) {
             case 1:
                 System.out.println(DayOfWeek.MONDAY);
                 break;
@@ -36,6 +35,9 @@ public class DayCheck {
                 System.out.println("Only values 1-7 are accepted");
                 break;
         }
+    }
 
+    public static DayOfWeek getCurrentDayOfWeek() {
+        return LocalDate.now().getDayOfWeek();
     }
 }
