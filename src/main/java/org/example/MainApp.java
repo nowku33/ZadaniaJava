@@ -13,16 +13,20 @@ public class MainApp {
         int option = printMenuAndReturnOptionNumber();
         switch (option) {
             case 1:
-                addSubDivMultiModuloCalculations(getNumberListFromConsole());
+                printAddSubDivMultiModuloCalculations(getNumberListFromConsole());
                 break;
             case 2:
                 int convertOption = printTempConvertMenuAndReturnOption();
                 if (convertOption == 1) {
                     System.out.println("Provide temperature in Celsius degrees:");
-                    printConvertedCelsiusToFahrenheit(scanner.nextDouble());
+                    double celsiusValue = scanner.nextDouble();
+                    double fahrenheitValue = getConvertedCelsiusToFahrenheit(celsiusValue);
+                    System.out.println(celsiusValue + " Celsius degrees is equal to " + fahrenheitValue + " Fahrenheit degrees");
                 } else {
                     System.out.println("Provide temperature in Fahrenheit degrees:");
-                    printConvertedFahrenheitToCelsius(scanner.nextDouble());
+                    double fahrenheitValue = scanner.nextDouble();
+                    double celsiusValue = getConvertedFahrenheitToCelsius(fahrenheitValue);
+                    System.out.println(fahrenheitValue + " Fahrenheit degrees is equal to " + celsiusValue + " Celsius degrees");
                 }
                 break;
             case 3:

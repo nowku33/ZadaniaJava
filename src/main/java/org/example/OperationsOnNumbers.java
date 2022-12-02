@@ -9,7 +9,7 @@ public class OperationsOnNumbers {
     private OperationsOnNumbers() {
     }
 
-    public static void addSubDivMultiModuloCalculations(List<Integer> numberList) {
+    public static void printAddSubDivMultiModuloCalculations(List<Integer> numberList) {
         if (numberList.size() > 1) {
             int addition = numberList.get(0);
             int subtraction = numberList.get(0);
@@ -39,7 +39,7 @@ public class OperationsOnNumbers {
 
     public static Map<String, Number> getSumAndAverageOfDigits(int number) {
         long sum = 0;
-        long average = 0;
+        double average = 0;
         int numberOfDigits = 0;
         while (number > 0) {
             numberOfDigits++;
