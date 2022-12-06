@@ -1,29 +1,24 @@
 package org.example;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Random;
 
 class TemperatureConversionTest {
-    private static final int CONVERTING_OFFSET = 32;
-    private static final double CONVERTING_CONSTANT = 1.8;
 
-    @Test
-    void getConvertedCelsiusToFahrenheit() {
-        Random random = new Random();
-        double generatedCelsiusValue = random.nextDouble();
-        double expectedFahrenheitValue = CONVERTING_CONSTANT * generatedCelsiusValue + CONVERTING_OFFSET;
-        double actualFahrenheitValue = TemperatureConversion.getConvertedCelsiusToFahrenheit(generatedCelsiusValue);
+    @ParameterizedTest
+    @CsvSource({"0,32", "200,392", "-100,-148"})
+    void getConvertedCelsiusToFahrenheit(double celsiusValue, double expectedFahrenheitValue) {
+        double actualFahrenheitValue = TemperatureConversion.getConvertedCelsiusToFahrenheit(celsiusValue);
         Assertions.assertEquals(expectedFahrenheitValue, actualFahrenheitValue);
     }
 
-    @Test
-    void getConvertedFahrenheitToCelsius() {
-        Random random = new Random();
-        double generatedFahrenheitValue = random.nextDouble();
-        double expectedCelsiusValue = (generatedFahrenheitValue - CONVERTING_OFFSET) / CONVERTING_CONSTANT;
-        double actualCelsiusValue = TemperatureConversion.getConvertedFahrenheitToCelsius(generatedFahrenheitValue);
+    @ParameterizedTest
+    @CsvSource({"32,0", "392,200", "-148,-100"})
+    void getConvertedFahrenheitToCelsius(double fahrenheitValue, double expectedCelsiusValue) {
+        double actualCelsiusValue = TemperatureConversion.getConvertedFahrenheitToCelsius(fahrenheitValue);
         Assertions.assertEquals(expectedCelsiusValue, actualCelsiusValue);
     }
 }

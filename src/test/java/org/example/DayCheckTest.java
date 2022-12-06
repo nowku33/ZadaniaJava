@@ -1,16 +1,16 @@
 package org.example;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 
 class DayCheckTest {
 
-    @Test
-    void getCurrentDayOfWeek() {
-        DayOfWeek expectedDay = LocalDate.now().getDayOfWeek();
-        Assert.assertEquals(DayCheck.getCurrentDayOfWeek(), expectedDay);
+    @ParameterizedTest
+    @CsvSource({"TUESDAY"})
+    void getCurrentDayOfWeek(DayOfWeek dayOfWeek) {
+        Assert.assertEquals(DayCheck.getCurrentDayOfWeek(), dayOfWeek);
     }
 }

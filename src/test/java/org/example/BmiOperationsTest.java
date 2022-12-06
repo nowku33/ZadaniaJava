@@ -2,43 +2,22 @@ package org.example;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import java.util.Random;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class BmiOperationsTest {
 
-    @Test
-    void getBmi() {
-        Random random = new Random();
-        double maxHeight = 2.4;
-        double minHeight = 1.4;
-        double heightInMeters = minHeight + (maxHeight - minHeight) * random.nextDouble();
-        double maxWeight = 2.4;
-        double minWeight = 1.4;
-        double weightInKg = minWeight + (maxWeight - minWeight) * random.nextDouble();
-        double expectedBmi = weightInKg / (heightInMeters * heightInMeters);
-        double bmi = BmiOperations.getBmi(weightInKg, heightInMeters);
-        Assertions.assertEquals(expectedBmi, bmi);
+    @ParameterizedTest
+    @CsvSource({"78,1.7,26.989619377162633", "200,1.8,61.72839506172839"})
+    void getBmi(double weightInKg, double heightInMeters, double expectedBmi) {
+        double actualBmi = BmiOperations.getBmi(weightInKg, heightInMeters);
+        Assertions.assertEquals(expectedBmi, actualBmi);
     }
 
-    @Test
-    void getBmiVerdict() {
-        double correctWeightBmiMax = 24.9;
-        double correctWeightBmiMin = 18.5;
-        double generatedBmiMax = 40;
-        double generatedBmiMin = 9;
-        String expectedVerdict;
-        Random random = new Random();
-        double generatedBmi = generatedBmiMin + (generatedBmiMax - generatedBmiMin) * random.nextDouble();
-        if (generatedBmi > correctWeightBmiMax) {
-            expectedVerdict = "overweight";
-        } else if (generatedBmi < correctWeightBmiMin) {
-            expectedVerdict = "underweight";
-        } else {
-            expectedVerdict = "correct weight";
-        }
-        String verdict = BmiOperations.getBmiVerdict(generatedBmi);
+    @ParameterizedTest
+    @CsvSource({"24.9,'correct weight'", "18.5,'correct weight'", "24.91,'overweight'", "18.49,'underweight'"})
+    void getBmiVerdict(double bmi, String expectedVerdict) {
+        String verdict = BmiOperations.getBmiVerdict(bmi);
         Assert.assertEquals(expectedVerdict, verdict);
     }
 

@@ -38,7 +38,7 @@ public class OperationsOnNumbers {
     }
 
     public static Map<String, Number> getSumAndAverageOfDigits(int number) {
-        long sum = 0;
+        int sum = 0;
         double average = 0;
         int numberOfDigits = 0;
         while (number > 0) {
@@ -48,7 +48,7 @@ public class OperationsOnNumbers {
             number = number / 10;
         }
         try {
-            average = sum / numberOfDigits;
+            average = (double) sum / numberOfDigits;
         } catch (ArithmeticException e) {
             System.out.println("You can not divide by 0!");
         }
