@@ -1,43 +1,32 @@
 package org.example;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import lombok.extern.log4j.Log4j2;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
+@Log4j2
 public class DayCheck {
 
     private DayCheck() {
     }
 
-    public static void dayOfWeek(int dayOfWeek) {
+    public static void printDayOfWeek(int dayOfWeek) {
         switch (dayOfWeek) {
-            case 1:
-                System.out.println(DayOfWeek.MONDAY);
-                break;
-            case 2:
-                System.out.println(DayOfWeek.TUESDAY);
-                break;
-            case 3:
-                System.out.println(DayOfWeek.WEDNESDAY);
-                break;
-            case 4:
-                System.out.println(DayOfWeek.THURSDAY);
-                break;
-            case 5:
-                System.out.println(DayOfWeek.FRIDAY);
-                break;
-            case 6:
-                System.out.println(DayOfWeek.SATURDAY);
-                break;
-            case 7:
-                System.out.println(DayOfWeek.SUNDAY);
-                break;
-            default:
-                System.out.println("Only values 1-7 are accepted");
-                break;
+            case 1 -> log.info(DayOfWeek.MONDAY);
+            case 2 -> log.info(DayOfWeek.TUESDAY);
+            case 3 -> log.info(DayOfWeek.WEDNESDAY);
+            case 4 -> log.info(DayOfWeek.THURSDAY);
+            case 5 -> log.info(DayOfWeek.FRIDAY);
+            case 6 -> log.info(DayOfWeek.SATURDAY);
+            case 7 -> log.info(DayOfWeek.SUNDAY);
+            default -> log.info(MainApp.getLanguageBundle().getString("dayOfWeekDefaultMsg"));
         }
     }
 
-    public static DayOfWeek getCurrentDayOfWeek() {
-        return LocalDate.now().getDayOfWeek();
+    public static String getDayOfWeek(LocalDateTime localDateTime, Locale locale) {
+        return localDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
     }
 }

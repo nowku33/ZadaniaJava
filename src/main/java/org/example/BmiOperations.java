@@ -13,11 +13,11 @@ public class BmiOperations {
         double bmiMin = 18.5;
         String verdict;
         if (bmi > bmiMax) {
-            verdict = "overweight";
+            verdict = MainApp.getLanguageBundle().getString("overweightTxt");
         } else if (bmi < bmiMin) {
-            verdict = "underweight";
+            verdict = MainApp.getLanguageBundle().getString("underweightTxt");
         } else {
-            verdict = "correct weight";
+            verdict = MainApp.getLanguageBundle().getString("correctWeightTxt");
         }
         return verdict;
     }

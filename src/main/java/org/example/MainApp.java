@@ -1,60 +1,62 @@
 package org.example;
 
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.example.BmiOperations.getBmi;
+import static org.example.BmiOperations.getBmiVerdict;
+import static org.example.DayCheck.getDayOfWeek;
 import static org.example.OperationsOnNumbers.*;
-import static org.example.TemperatureConversion.*;
-import static org.example.BmiOperations.*;
-import static org.example.DayCheck.*;
+import static org.example.TemperatureConversion.getConvertedCelsiusToFahrenheit;
+import static org.example.TemperatureConversion.getConvertedFahrenheitToCelsius;
 
+@Log4j2
 public class MainApp {
+    static final List<String> AVAILABLE_LANGUAGES = Arrays.asList("en", "pl");
+    @Getter
+    static Locale locale = Locale.getDefault();
+    @Getter
+    static ResourceBundle languageBundle = ResourceBundle.getBundle("language", locale);
+
     public static void main(String[] args) {
+        chooseAndSetLanguage();
+        languageBundle = ResourceBundle.getBundle("language", locale);
         Scanner scanner = new Scanner(System.in);
         int option = printMenuAndReturnOptionNumber();
         switch (option) {
-            case 1:
-                printAddSubDivMultiModuloCalculations(getNumberListFromConsole());
-                break;
-            case 2:
-                int convertOption = printTempConvertMenuAndReturnOption();
-                if (convertOption == 1) {
-                    System.out.println("Provide temperature in Celsius degrees:");
-                    double celsiusValue = scanner.nextDouble();
-                    double fahrenheitValue = getConvertedCelsiusToFahrenheit(celsiusValue);
-                    System.out.println(celsiusValue + " Celsius degrees is equal to " + fahrenheitValue + " Fahrenheit degrees");
-                } else {
-                    System.out.println("Provide temperature in Fahrenheit degrees:");
-                    double fahrenheitValue = scanner.nextDouble();
-                    double celsiusValue = getConvertedFahrenheitToCelsius(fahrenheitValue);
-                    System.out.println(fahrenheitValue + " Fahrenheit degrees is equal to " + celsiusValue + " Celsius degrees");
-                }
-                break;
-            case 3:
+            case 1 -> calculatorOperationsMenu();
+            case 2 -> temperatureConversionMenu();
+            case 3 -> {
                 Map<String, Number> sumAndAverageOfDigits = getSumAndAverageOfDigits(readInputAndReturnIntNumber());
-                System.out.println(sumAndAverageOfDigits);
-                break;
-            case 4:
+                log.info("{} {}", languageBundle.getString("sumTxt"), sumAndAverageOfDigits.get("sum"));
+                log.info("{} {}", languageBundle.getString("averageTxt"),
+                        sumAndAverageOfDigits.get("average"));
+            }
+            case 4 -> {
                 Map<String, Number> greatestAndSmallestNumber = getGreatestAndSmallestNumber(getNumberListFromConsole());
-                System.out.println(greatestAndSmallestNumber);
-                break;
-            case 5:
-                System.out.println("Weight [kg]:");
+                log.info(languageBundle.getString("smallestNumberMsg") + greatestAndSmallestNumber.get("smallestNumber"));
+                log.info(languageBundle.getString("greatestNumberMsg") + greatestAndSmallestNumber.get("greatestNumber"));
+            }
+            case 5 -> {
+                log.info(languageBundle.getString("provideWeightMsg"));
                 double weight = scanner.nextDouble();
-                System.out.println("Height [m]:");
+                log.info(languageBundle.getString("provideHeightMsg"));
                 double height = scanner.nextDouble();
                 double bmi = getBmi(weight, height);
-                System.out.println(getBmiVerdict(bmi));
-                break;
-            case 6:
-                System.out.println("Today is " + getCurrentDayOfWeek());
-                break;
-            case 0:
-                System.out.println("exit the program");
+                log.info(getBmiVerdict(bmi));
+            }
+            case 6 -> {
+                LocalDateTime currentDay = LocalDateTime.now();
+                log.info("{} {}", languageBundle.getString("todayMsg"), getDayOfWeek(currentDay, locale));
+            }
+            case 0 -> {
+                log.info(languageBundle.getString("mainMenuExit"));
                 System.exit(0);
-                break;
-            default:
-                System.out.println("Incorrect value. Please provide number from 0 to 7");
-                break;
+            }
+            default -> log.info(languageBundle.getString("mainMenuIncorrectValue"));
         }
     }
 
@@ -62,7 +64,7 @@ public class MainApp {
         List<Integer> digitList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("Please provide integer number or press any letter to stop:");
+            log.info(languageBundle.getString("provideIntOrPressCharMsg"));
             try {
                 int option = scanner.nextInt();
                 digitList.add(option);
@@ -77,18 +79,11 @@ public class MainApp {
         Scanner scanner = new Scanner(System.in);
         int option = -1;
         do {
-            System.out.println("Welcome choose an action from the following by entering the number: ");
-            System.out.println("1 – perform calculator operation on some amount of numbers");
-            System.out.println("2 – convert Fahrenheit to Celsius (or reverse)");
-            System.out.println("3 – calculate the sum and average of digits for provided number ");
-            System.out.println("4 – choose the biggest and the smallest number for provided number list");
-            System.out.println("5 – calculate BMI (Body mass index) and interpret the result");
-            System.out.println("6 - get the current day of week");
-            System.out.println("Please select what you want to do:");
+            log.info(languageBundle.getString("mainMenu"));
             try {
                 option = scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Please provide a number.");
+                log.info(languageBundle.getString("mainMenuMismatchExceptionText"));
                 scanner.nextLine();
             }
         } while (option < 0 || option > 7);
@@ -99,12 +94,11 @@ public class MainApp {
         int option = -1;
         Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("1 - Convert Celsius degree to Fahrenheit.");
-            System.out.println("2 - Convert Fahrenheit degree to Celsius");
+            log.info(languageBundle.getString("tempConversionMenu"));
             try {
                 option = scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Please provide a number.");
+                log.info(languageBundle.getString("provideNumberMsg"));
                 scanner.nextLine();
             }
         } while (option != 1 && option != 2);
@@ -115,13 +109,62 @@ public class MainApp {
         Scanner scanner = new Scanner(System.in);
         do {
             try {
-                System.out.println("Your digits:");
+                log.info(languageBundle.getString("provideDigitsMsg"));
                 String inputStr = scanner.nextLine();
                 return Integer.parseInt(inputStr.replaceAll("[^\\d]", ""));
 
             } catch (NumberFormatException e) {
-                System.out.println("Please provide integer value");
+                log.info(languageBundle.getString("provideIntMsg"));
             }
         } while (true);
+    }
+
+    private static void temperatureConversionMenu() {
+        Scanner scanner = new Scanner(System.in);
+        int convertOption = printTempConvertMenuAndReturnOption();
+        if (convertOption == 1) {
+            log.info(languageBundle.getString("provideCelsiusDegreesMsg"));
+            double celsiusValue = scanner.nextDouble();
+            double fahrenheitValue = getConvertedCelsiusToFahrenheit(celsiusValue);
+            log.info("{} {} {} {}", celsiusValue, languageBundle.getString("celsiusIsEqualMsg"),
+                    fahrenheitValue, languageBundle.getString("fahrenheitDegreesText"));
+        } else {
+            log.info(languageBundle.getString("provideFahrenheitDegreesMsg"));
+            double fahrenheitValue = scanner.nextDouble();
+            double celsiusValue = getConvertedFahrenheitToCelsius(fahrenheitValue);
+            log.info("{} {} {} {}", fahrenheitValue, languageBundle.getString("fahrenheitIsEqualMsg"),
+                    celsiusValue, languageBundle.getString("celsiusDegreesText"));
+        }
+    }
+
+    private static void calculatorOperationsMenu() {
+        List<Integer> numberlist = getNumberListFromConsole();
+        if (numberlist.size() > 1) {
+            log.info("a+b+...=" + getAdditionResult(numberlist));
+            log.info("a-b-...=" + getSubtractionResult(numberlist));
+            log.info("a*b-...=" + getMultiplicationResult(numberlist));
+            log.info("a:b:...=" + getDivisionResult(numberlist));
+            log.info("a%b%...=" + getModuloResult(numberlist));
+        } else {
+            log.info(languageBundle.getString("calcOperationsMenuErrorMsg"));
+        }
+    }
+
+    private static void chooseAndSetLanguage() {
+        Scanner scanner = new Scanner(System.in);
+        String appLanguage = null;
+        String country = null;
+        do {
+            log.info("{} {}}", languageBundle.getString("chooseLangMsg"), AVAILABLE_LANGUAGES);
+            String selectedLanguage = scanner.nextLine();
+            for (String language : AVAILABLE_LANGUAGES) {
+                if (language.contains(selectedLanguage)) {
+                    appLanguage = selectedLanguage;
+                    country = selectedLanguage.toUpperCase();
+                    break;
+                }
+            }
+        } while (appLanguage == null);
+        locale = new Locale(appLanguage, country);
     }
 }

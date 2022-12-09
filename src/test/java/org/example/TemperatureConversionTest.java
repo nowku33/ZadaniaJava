@@ -2,22 +2,32 @@ package org.example;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Random;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class TemperatureConversionTest {
+    static Stream<Arguments> tempConversionArgumentProvider() {
+        return Stream.of(
+                arguments(0, 32),
+                arguments(200, 392),
+                arguments(-100, -148)
+        );
+    }
 
     @ParameterizedTest
-    @CsvSource({"0,32", "200,392", "-100,-148"})
+    @MethodSource("tempConversionArgumentProvider")
     void getConvertedCelsiusToFahrenheit(double celsiusValue, double expectedFahrenheitValue) {
         double actualFahrenheitValue = TemperatureConversion.getConvertedCelsiusToFahrenheit(celsiusValue);
         Assertions.assertEquals(expectedFahrenheitValue, actualFahrenheitValue);
     }
 
     @ParameterizedTest
-    @CsvSource({"32,0", "392,200", "-148,-100"})
-    void getConvertedFahrenheitToCelsius(double fahrenheitValue, double expectedCelsiusValue) {
+    @MethodSource("tempConversionArgumentProvider")
+    void getConvertedFahrenheitToCelsius(double expectedCelsiusValue, double fahrenheitValue) {
         double actualCelsiusValue = TemperatureConversion.getConvertedFahrenheitToCelsius(fahrenheitValue);
         Assertions.assertEquals(expectedCelsiusValue, actualCelsiusValue);
     }
